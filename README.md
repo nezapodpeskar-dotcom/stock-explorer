@@ -10,6 +10,46 @@ Understanding how technology giants perform over time is a core skill in finance
 
 ---
 
+## Architecture
+
+```mermaid
+flowchart LR
+    subgraph DATA["📦 Data"]
+        PD[("Plotly Built-in\nStock Dataset\nAAPL · MSFT · GOOG\nAMZN · FB · NFLX")]
+    end
+
+    subgraph APP["🐍 Application"]
+        direction TB
+        A["app.py\nStreamlit + Plotly + Pandas"]
+        C[".streamlit/config.toml\nNavy theme"]
+        R["requirements.txt"]
+    end
+
+    subgraph GH["🐙 GitHub"]
+        G["nezapodpeskar-dotcom/\nstock-explorer"]
+    end
+
+    subgraph CLOUD["☁️ Streamlit Cloud"]
+        S["nezky-investor-lab\n.streamlit.app"]
+    end
+
+    subgraph USER["👤 Users"]
+        direction TB
+        D["🖥️ Desktop"]
+        M["📱 Mobile"]
+    end
+
+    PD --> A
+    A --> G
+    C --> G
+    R --> G
+    G -->|"auto-deploy\non push"| S
+    S --> D
+    S --> M
+```
+
+---
+
 ## Features
 
 | Tab | What it does |
