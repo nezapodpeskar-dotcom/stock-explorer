@@ -108,6 +108,26 @@ st.markdown(
 
         /* ── Alert / info boxes ── */
         [data-testid="stAlert"] p { font-size: 1rem !important; }
+
+        /* ── Mobile tweaks ── */
+        @media (max-width: 768px) {
+            .block-container {
+                padding-left: 0.8rem !important;
+                padding-right: 0.8rem !important;
+                padding-top: 1.2rem !important;
+            }
+            h1 { font-size: 1.65rem !important; }
+            h2 { font-size: 1.15rem !important; }
+            h5 { font-size: 0.9rem !important; }
+            p, li { font-size: 0.95rem !important; }
+            [data-testid="stMetricValue"]  { font-size: 1.35rem !important; }
+            [data-testid="stMetricLabel"]  { font-size: 0.75rem !important; }
+            [data-testid="metric-container"] { padding: 0.8rem 0.9rem !important; }
+            [data-testid="stTab"] button {
+                font-size: 0.78rem !important;
+                padding: 0.4rem 0.5rem !important;
+            }
+        }
     </style>
     """,
     unsafe_allow_html=True,
@@ -249,13 +269,16 @@ with tab_overview:
     )
 
     st.markdown("##### Stock-by-stock results")
-    metric_cols = st.columns(len(chosen))
-    for col, t in zip(metric_cols, chosen):
-        col.metric(
-            label=t,
-            value=f"{dff[t].iloc[-1]:.2f}×",
-            delta=f"{growths[t]:+.1f}%",
-        )
+    _per_row = 3
+    for _row_start in range(0, len(chosen), _per_row):
+        _row_tickers = chosen[_row_start : _row_start + _per_row]
+        _row_cols = st.columns(len(_row_tickers))
+        for col, t in zip(_row_cols, _row_tickers):
+            col.metric(
+                label=t,
+                value=f"{dff[t].iloc[-1]:.2f}×",
+                delta=f"{growths[t]:+.1f}%",
+            )
 
     st.markdown("---")
     st.markdown("##### Highlights")
@@ -345,10 +368,9 @@ with tab_calculator:
         "if you had invested it at the start of the selected period."
     )
 
-    input_col, _, result_col = st.columns([1, 0.15, 2])
-
-    with input_col:
-        st.markdown("##### Your inputs")
+    st.markdown("##### Your inputs")
+    _calc_col1, _calc_col2 = st.columns([1, 1])
+    with _calc_col1:
         invest_amount = st.number_input(
             "Starting investment ($)",
             min_value=1,
@@ -356,6 +378,7 @@ with tab_calculator:
             step=100,
             help="The amount you would have invested on the first day of the period.",
         )
+    with _calc_col2:
         invest_stock = st.selectbox(
             "Stock to invest in",
             options=chosen,
@@ -367,32 +390,31 @@ with tab_calculator:
     growth_pct  = growths[invest_stock]
     is_gain     = profit >= 0
 
-    with result_col:
-        st.markdown("##### Results")
-        rc1, rc2, rc3 = st.columns(3)
-        rc1.metric("Invested", f"${invest_amount:,.0f}")
-        rc2.metric("End value", f"${final_value:,.2f}", delta=f"{growth_pct:+.1f}%")
-        rc3.metric("Gain" if is_gain else "Loss", f"${abs(profit):,.2f}")
+    st.markdown("##### Results")
+    rc1, rc2, rc3 = st.columns(3)
+    rc1.metric("Invested", f"${invest_amount:,.0f}")
+    rc2.metric("End value", f"${final_value:,.2f}", delta=f"{growth_pct:+.1f}%")
+    rc3.metric("Gain" if is_gain else "Loss", f"${abs(profit):,.2f}")
 
-        st.markdown("")
+    st.markdown("")
 
-        if is_gain:
-            st.success(
-                f"An investment of ${invest_amount:,.0f} in {invest_stock} at the start of this period "
-                f"would have grown to ${final_value:,.2f} — "
-                f"a gain of ${profit:,.2f} ({growth_pct:+.1f}%)."
-            )
-        else:
-            st.error(
-                f"An investment of ${invest_amount:,.0f} in {invest_stock} at the start of this period "
-                f"would have fallen to ${final_value:,.2f} — "
-                f"a loss of ${abs(profit):,.2f} ({growth_pct:+.1f}%)."
-            )
-
-        st.caption(
-            "This calculator assumes you bought on the first day of the selected period "
-            "and sold on the last day. It does not account for taxes, broker fees, or dividends."
+    if is_gain:
+        st.success(
+            f"An investment of ${invest_amount:,.0f} in {invest_stock} at the start of this period "
+            f"would have grown to ${final_value:,.2f} — "
+            f"a gain of ${profit:,.2f} ({growth_pct:+.1f}%)."
         )
+    else:
+        st.error(
+            f"An investment of ${invest_amount:,.0f} in {invest_stock} at the start of this period "
+            f"would have fallen to ${final_value:,.2f} — "
+            f"a loss of ${abs(profit):,.2f} ({growth_pct:+.1f}%)."
+        )
+
+    st.caption(
+        "This calculator assumes you bought on the first day of the selected period "
+        "and sold on the last day. It does not account for taxes, broker fees, or dividends."
+    )
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -705,11 +727,11 @@ QUIZ_FACTS = [
     },
     {
         "company": "Google / Alphabet 🔍",
-        "statement": "The name \"Alphabet\" partly refers to \"alpha\" — a finance term for investment return above benchmark.",
+        "statement": 'The name "Alphabet" partly refers to "alpha" — a finance term for investment return above benchmark.',
         "answer": True,
         "right_msg": "Correct! The double meaning is confirmed in Alphabet's own founding letter on abc.xyz.",
-        "wrong_msg": "The name does partly mean \"alpha-bet\" — with alpha being the finance term for returns above benchmark.",
-        "detail": "From abc.xyz: \"We also like that it means alpha-bet (Alpha is investment return above benchmark), which we strive for!\"",
+        "wrong_msg": 'The name does partly mean "alpha-bet" — with alpha being the finance term for returns above benchmark.',
+        "detail": 'From abc.xyz: "We also like that it means alpha-bet (Alpha is investment return above benchmark), which we strive for!"',
         "source": "abc.xyz (Alphabet founders' letter)",
         "accent": "#4285F4",
     },
@@ -719,7 +741,7 @@ QUIZ_FACTS = [
         "answer": True,
         "right_msg": "Correct! Netflix is one of the most globally distributed entertainment platforms ever built.",
         "wrong_msg": "Netflix is indeed available in 190+ countries across 50+ languages.",
-        "detail": "Netflix states on about.netflix.com: \"We are entertaining over half a billion people in more than 190 countries and 50 languages.\"",
+        "detail": 'Netflix states on about.netflix.com: "We are entertaining over half a billion people in more than 190 countries and 50 languages."',
         "source": "about.netflix.com",
         "accent": "#E50914",
     },
@@ -729,7 +751,7 @@ QUIZ_FACTS = [
         "answer": True,
         "right_msg": "Correct! Facebook launched in 2004 and changed the way people connect.",
         "wrong_msg": "Facebook did launch in 2004 — from Mark Zuckerberg's Harvard dorm room.",
-        "detail": "Meta confirms on about.meta.com: \"When Facebook launched in 2004, it changed the way people connect.\"",
+        "detail": 'Meta confirms on about.meta.com: "When Facebook launched in 2004, it changed the way people connect."',
         "source": "about.meta.com/company-info",
         "accent": "#0082FB",
     },
@@ -739,16 +761,16 @@ QUIZ_FACTS = [
         "answer": False,
         "right_msg": "Correct! Meta's services are free — revenue comes from advertising, not subscriptions.",
         "wrong_msg": "Meta's core services are actually free. The business model is advertising.",
-        "detail": "Meta states on about.meta.com: \"our business model is ads so our services can be free.\" This ad model generated over $160 billion in revenue in 2024.",
+        "detail": 'Meta states on about.meta.com: "our business model is ads so our services can be free." This ad model generated over $160 billion in revenue in 2024.',
         "source": "about.meta.com/company-info",
         "accent": "#0082FB",
     },
     {
         "company": "Nvidia 🟢",
-        "statement": "NVIDIA describes itself as having \"pioneered accelerated computing\".",
+        "statement": 'NVIDIA describes itself as having "pioneered accelerated computing".',
         "answer": True,
         "right_msg": "Correct! That's NVIDIA's own phrasing from their official About page.",
-        "wrong_msg": "NVIDIA does use this exact phrase on its about page: \"NVIDIA pioneered accelerated computing.\"",
+        "wrong_msg": 'NVIDIA does use this exact phrase on its about page: "NVIDIA pioneered accelerated computing."',
         "detail": "NVIDIA positions accelerated computing — not just gaming GPUs — as its defining contribution to technology, now driving the AI revolution.",
         "source": "nvidia.com/en-us/about-nvidia",
         "accent": "#76B900",
