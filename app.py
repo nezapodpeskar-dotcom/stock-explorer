@@ -185,10 +185,12 @@ with st.sidebar:
         ("Netflix 📺",   "Netflix now entertains over half a billion people in more than 190 countries across 50 different languages."),
         ("Meta 🌐",      "Facebook launched in 2004 to connect a single university campus. Today Meta owns four apps each used by over a billion people."),
         ("Microsoft 💻", "IBM launched its first personal computer on August 12, 1981 — running Microsoft's MS-DOS 1.0, the deal that built Microsoft's empire."),
-        ("Nike 👟",      "Between 1994 and 1998 Nike signed Brazil & US Soccer and launched the first Mercurial boot — the four years that made Nike a global football brand."),
+        ("Google 🔍",    "Alphabet's name is a deliberate double meaning — 'alpha-bet' also references 'alpha', the finance term for investment return above benchmark."),
     ]
+    # Changes daily; consistent within a session
     import datetime as _dt
-    random.seed(int(_dt.date.today().strftime("%Y%m%d")))
+    _seed = int(_dt.date.today().strftime("%Y%m%d"))
+    random.seed(_seed)
     _company, _fact = random.choice(_sidebar_facts)
 
     st.markdown(
@@ -572,21 +574,6 @@ COMPANY_INSIGHTS = {
         "source": "news.microsoft.com/facts-about-microsoft",
         "accent": "#00A4EF",
     },
-    "Nike 👟": {
-        "headline": "Four years that launched a global football empire.",
-        "fact": (
-            "Between 1994 and 1998, Nike signed both the Brazil and U.S. Soccer "
-            "national teams, debuted iconic advertising campaigns, and launched "
-            "the first-ever Mercurial boot — the lightest football boot of its "
-            "time. Those four years transformed Nike from a running and basketball "
-            "brand into the world's dominant force in football, a position it "
-            "has held ever since."
-        ),
-        "stats": [("Founded", "1964"), ("Countries", "190+"), ("Breakthrough era", "1994–1998")],
-        "source": "about.nike.com",
-        "accent": "#111111",
-        "note": "Nike (NKE) is not in the Plotly stock dataset used by this app's charts.",
-    },
 }
 
 with tab_insights:
@@ -639,10 +626,6 @@ with tab_insights:
     stat_cols = st.columns(len(info["stats"]))
     for col, (label, value) in zip(stat_cols, info["stats"]):
         col.metric(label=label, value=value)
-
-    # ── Optional note (e.g. Nike not in dataset) ───────────────────────────────
-    if "note" in info:
-        st.caption(f"ℹ️ {info['note']}")
 
     st.markdown("---")
 
@@ -906,7 +889,7 @@ with tab_funfacts:
             if _correct:
                 st.success(f"🎉 {_fact['right_msg']}")
             else:
-                _chosen_label  = "True" if st.session_state.q_chosen else "False"
+                _chosen_label = "True" if st.session_state.q_chosen else "False"
                 _correct_label = "True" if _fact["answer"] else "False"
                 st.error(
                     f"You answered **{_chosen_label}** — the correct answer is **{_correct_label}**. "
