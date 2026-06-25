@@ -50,6 +50,64 @@ flowchart LR
 
 ---
 
+## User Journey
+
+```mermaid
+journey
+    title User Journey — Big Tech Stock Explorer
+    section Discover
+      Open the app: 5: User
+      Read the intro text: 4: User
+    section Explore
+      Select stocks in sidebar: 5: User
+      Adjust the date range: 5: User
+      View normalised price chart: 5: User
+      Check best performer highlight: 4: User
+    section Analyse
+      Open Investment Calculator: 5: User
+      Enter investment amount: 5: User
+      Review gain or loss result: 5: User
+      Open Peak Tracker: 4: User
+      Find the stock peak date: 4: User
+    section Research
+      Open Market Insights: 5: User
+      Choose a company: 5: User
+      Read sourced business fact: 5: User
+    section Play
+      Open Fun Facts Quiz: 5: User
+      Answer True or False: 5: User
+      See feedback and source: 5: User
+      View final score: 5: User
+```
+
+---
+
+## Build & Deployment Timeline
+
+```mermaid
+gantt
+    title Project Build & Deployment Pipeline
+    dateFormat YYYY-MM-DD
+    section Data Layer
+        Plotly built-in stock dataset        :done, data,  2026-06-01, 2d
+    section Application
+        Core app.py — charts & metrics       :done, app1,  2026-06-03, 3d
+        Tabs, theming & CSS polish           :done, app2,  after app1, 2d
+        Market Insights tab (Fetch MCP)      :done, app3,  after app2, 2d
+        Fun Facts True/False quiz            :done, app4,  after app3, 2d
+        Mobile responsiveness                :done, app5,  after app4, 1d
+    section GitHub
+        Repo created & initial push          :done, gh1,   2026-06-10, 1d
+        Incremental commits via GitHub MCP   :done, gh2,   after gh1,  8d
+    section Streamlit Cloud
+        Connected repo & deployed            :done, sc1,   2026-06-11, 1d
+        Live at nezky-investor-lab           :done, sc2,   after sc1,  7d
+    section Users
+        App publicly available               :done, usr,   2026-06-12, 7d
+```
+
+---
+
 ## Features
 
 | Tab | What it does |
