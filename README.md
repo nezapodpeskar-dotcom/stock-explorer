@@ -10,104 +10,6 @@ Understanding how technology giants perform over time is a core skill in finance
 
 ---
 
-## Architecture
-
-```mermaid
-flowchart LR
-    subgraph DATA["📦 Data"]
-        PD[("Plotly Built-in\nStock Dataset\nAAPL · MSFT · GOOG\nAMZN · FB · NFLX")]
-    end
-
-    subgraph APP["🐍 Application"]
-        direction TB
-        A["app.py\nStreamlit + Plotly + Pandas"]
-        C[".streamlit/config.toml\nNavy theme"]
-        R["requirements.txt"]
-    end
-
-    subgraph GH["🐙 GitHub"]
-        G["nezapodpeskar-dotcom/\nstock-explorer"]
-    end
-
-    subgraph CLOUD["☁️ Streamlit Cloud"]
-        S["nezky-investor-lab\n.streamlit.app"]
-    end
-
-    subgraph USER["👤 Users"]
-        direction TB
-        D["🖥️ Desktop"]
-        M["📱 Mobile"]
-    end
-
-    PD --> A
-    A --> G
-    C --> G
-    R --> G
-    G -->|"auto-deploy\non push"| S
-    S --> D
-    S --> M
-```
-
----
-
-## User Journey
-
-```mermaid
-journey
-    title User Journey — Big Tech Stock Explorer
-    section Discover
-      Open the app: 5: User
-      Read the intro text: 4: User
-    section Explore
-      Select stocks in sidebar: 5: User
-      Adjust the date range: 5: User
-      View normalised price chart: 5: User
-      Check best performer highlight: 4: User
-    section Analyse
-      Open Investment Calculator: 5: User
-      Enter investment amount: 5: User
-      Review gain or loss result: 5: User
-      Open Peak Tracker: 4: User
-      Find the stock peak date: 4: User
-    section Research
-      Open Market Insights: 5: User
-      Choose a company: 5: User
-      Read sourced business fact: 5: User
-    section Play
-      Open Fun Facts Quiz: 5: User
-      Answer True or False: 5: User
-      See feedback and source: 5: User
-      View final score: 5: User
-```
-
----
-
-## Build & Deployment Timeline
-
-```mermaid
-gantt
-    title Project Build & Deployment Pipeline
-    dateFormat YYYY-MM-DD
-    section Data Layer
-        Plotly built-in stock dataset        :done, data,  2026-06-01, 2d
-    section Application
-        Core app.py — charts & metrics       :done, app1,  2026-06-03, 3d
-        Tabs, theming & CSS polish           :done, app2,  after app1, 2d
-        Market Insights tab (Fetch MCP)      :done, app3,  after app2, 2d
-        Fun Facts True/False quiz            :done, app4,  after app3, 2d
-        Mobile responsiveness                :done, app5,  after app4, 1d
-    section GitHub
-        Repo created & initial push          :done, gh1,   2026-06-10, 1d
-        Incremental commits via GitHub MCP   :done, gh2,   after gh1,  8d
-    section Streamlit Cloud
-        Connected repo & deployed            :done, sc1,   2026-06-11, 1d
-        Live at nezky-investor-lab           :done, sc2,   after sc1,  7d
-    section Users
-        App publicly available               :done, usr,   2026-06-12, 7d
-```
-
----
-
 ## Features
 
 | Tab | What it does |
@@ -115,7 +17,7 @@ gantt
 | **📊 Overview & Charts** | Normalised price trends, total growth bar chart, best performer and most volatile highlights |
 | **💰 Investment Calculator** | "What if I invested $X?" — shows end value, gain/loss, and contextual commentary |
 | **🏔️ Peak Tracker** | Finds the exact peak date for any stock within the selected window, with a starred chart |
-| **💡 Market Insights** | Curated business facts for Apple, Google, Amazon, Netflix, Meta, Microsoft, and Nike — sourced from official company pages |
+| **💡 Market Insights** | Curated business facts for Apple, Google, Amazon, Netflix, Meta, and Microsoft — sourced from official company pages |
 | **🎯 Fun Facts Quiz** | 12-question True/False quiz covering Big Tech history; tracks your score with session state |
 
 **Sidebar controls** — stock multiselect, date-range slider, and a daily-rotating "Did You Know?" company fact.
@@ -186,6 +88,91 @@ This app is ready for **Streamlit Cloud**:
 1. Fork or connect this repo at [share.streamlit.io](https://share.streamlit.io)
 2. Set **Main file path** to `app.py`
 3. No secrets or environment variables required
+
+---
+
+## Architecture
+
+```mermaid
+flowchart LR
+    A[("Plotly built-in\nstock dataset\nAAPL GOOG AMZN\nFB MSFT NFLX")] --> B
+
+    subgraph B["app.py"]
+        direction TB
+        B1["📊 Overview & Charts"] --- B2["💰 Investment Calculator"]
+        B2 --- B3["🏔️ Peak Tracker"]
+        B3 --- B4["💡 Market Insights"]
+        B4 --- B5["🎯 Fun Facts Quiz"]
+    end
+
+    C[".streamlit/config.toml\nNavy theme"] --> B
+    D["requirements.txt\nstreamlit pandas plotly"] --> B
+
+    B --> E[("GitHub\nnezapodpeskar-dotcom\n/stock-explorer")]
+    E --> F["Streamlit Cloud\nnezky-investor-lab\n.streamlit.app"]
+
+    F --> G["🖥️ Desktop"]
+    F --> H["📱 Mobile"]
+```
+
+---
+
+## User Journey
+
+```mermaid
+journey
+    title A student explores the Big Tech Stock Explorer
+    section Discover
+      Lands on the app: 5: Student
+      Reads the intro text: 4: Student
+    section Explore
+      Picks stocks in sidebar: 5: Student
+      Adjusts the date range: 5: Student
+      Reads the Did You Know fact: 4: Student
+    section Analyse
+      Compares growth on line chart: 5: Student
+      Checks the bar chart ranking: 5: Student
+      Runs the investment calculator: 5: Student
+    section Research
+      Finds the peak date and chart: 4: Student
+      Reads a Market Insights card: 5: Student
+    section Play
+      Takes the Fun Facts quiz: 5: Student
+      Checks their final score: 5: Student
+      Clicks Play Again: 4: Student
+```
+
+---
+
+## Build & Deployment Timeline
+
+```mermaid
+gantt
+    title Big Tech Stock Explorer — Build & Deployment
+    dateFormat  YYYY-MM-DD
+    axisFormat  %d %b
+
+    section Data Layer
+    Plotly stock dataset integrated       :done, 2026-06-01, 1d
+
+    section Application
+    Overview & Charts tab                 :done, 2026-06-02, 1d
+    Investment Calculator tab             :done, 2026-06-03, 1d
+    Peak Tracker tab                      :done, 2026-06-04, 1d
+    Market Insights tab                   :done, 2026-06-05, 2d
+    Fun Facts Quiz tab                    :done, 2026-06-07, 2d
+
+    section GitHub
+    Repo created & files pushed           :done, 2026-06-09, 1d
+    README + Mermaid diagrams added       :done, 2026-06-10, 1d
+
+    section Streamlit Cloud
+    App deployed & live                   :done, 2026-06-11, 1d
+    Mobile responsiveness improvements    :done, 2026-06-12, 1d
+
+    section Users
+    Available to users                    :active, 2026-06-12, 30d
+```
 
 ---
 
